@@ -8,7 +8,7 @@ from flask_cors import CORS
 
 import uuid
 import time
-import db4iot
+# import db4iot
 
 app = Flask(__name__)
 CORS(app)
@@ -37,6 +37,10 @@ def createDevice():
     Devices.insert(device)
     return jsonify({"status":"ok", "data": {"device": device}})
 
+
+@app.route("/", methods=["GET"])
+def index():
+    return "Trip Tracker"
 
 @app.route("/api/v1/device/<device_id>", methods=["PUT"])
 def updateDevice(device_id):
@@ -134,6 +138,7 @@ def deleteTrip():
 
 if __name__ == "__main__":
     app.run(
+        port=4000,
         host='0.0.0.0',
         debug=True
     )
