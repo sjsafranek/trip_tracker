@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import uuid
 import time
-import db4iot
+# import db4iot
 
 from tinydb import Query
 
@@ -22,10 +22,10 @@ class MainHandler(RequestHandler):
 
 class BaseHandler(RequestHandler):
 
-    def initialize(self, database):
+    def initialize(self, cache, database):
         self.Database = database
-        self.Trips = database.table('trips')
-        self.Devices = database.table('devices')
+        self.Trips = cache.table('trips')
+        self.Devices = cache.table('devices')
 
     def sendResponse(self, json_data, status_code=200):
         self.set_status(status_code)
@@ -98,7 +98,7 @@ class UpdateDeviceHandler(BaseHandler):
         device["waypoint__lon"] = location[0]
         device["waypoint__lat"]  = location[1]
         device["device_id"] = device_id
-        device["event_timestmap"] = int(time.time())
+        device["event_timestamp"] = int(time.time())
         self.Devices.update(device, Query().device_id == 'device_id')
 
         self.sendResponse({"status":"ok", "data": {"device": device}})
@@ -116,7 +116,7 @@ class TripHandler(BaseHandler):
 
     def post(self):
         trip_id = str(uuid.uuid4())
-        event_timestmap = int(time.time())
+        event_timestamp = int(time.time())
         device_id = request.args.get('device_id')
         position = request.args.get('position')
 
@@ -127,9 +127,9 @@ class TripHandler(BaseHandler):
             location = self.parsePosition(position)
             trip = {
                 'device_id': device_id,
-                'event_timestmap': event_timestmap,
+                'event_timestamp': event_timestamp,
                 'trip_id': trip_id,
-                'trip_start_time': event_timestmap,
+                'trip_start_time': event_timestamp,
                 'trip_end_time': None,
                 'origin__lon': location[0],
                 'origin__lat': location[1],
