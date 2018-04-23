@@ -57,7 +57,8 @@ class BaseHandler(RequestHandler):
     def deviceIsValid(self, device_id):
         return 0 != len(self.Devices.search(Query().device_id == device_id))
 
-
+    def options(self):
+        self.sendResponse({"status":"ok"})
 
 
 class CreateDeviceHandler(BaseHandler):
