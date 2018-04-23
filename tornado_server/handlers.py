@@ -60,7 +60,7 @@ class BaseHandler(RequestHandler):
     def deviceIsValid(self, device_id):
         return 0 != len(self.Devices.search(Query().device_id == device_id))
 
-    def options(self, device_id):
+    def _options(self):
         # self.sendResponse({"status":"ok"})
         self.set_header("Access-Control-Allow-Origin", "*");
         self.set_header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
@@ -79,6 +79,9 @@ class CreateDeviceHandler(BaseHandler):
         }
         self.Devices.insert(device)
         self.sendResponse({"status":"ok", "data": {"device": device}})
+
+    def options(self):
+        self._options()
 
     # def delete(self):
     #     self.sendResponse({'status': 'ok'})
@@ -116,6 +119,9 @@ class InsertDeviceWaypointHandler(BaseHandler):
         self.Database.insertDeviceWaypoint(device)
 
         self.sendResponse({"status":"ok", "data": {"device": device}})
+
+    def options(self):
+        self._options()
 
     # def post(self):
         # self.sendResponse({'status': 'ok'})
@@ -177,6 +183,8 @@ class TripHandler(BaseHandler):
 
         return self.missingParamError()
 
+    def options(self):
+        self._options()
 
 
 '''
