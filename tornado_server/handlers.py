@@ -120,7 +120,7 @@ class InsertDeviceWaypointHandler(BaseHandler):
 
         self.sendResponse({"status":"ok", "data": {"device": device}})
 
-    def options(self):
+    def options(self, device_id):
         self._options()
 
     # def post(self):
@@ -183,7 +183,7 @@ class TripHandler(BaseHandler):
 
         return self.missingParamError()
 
-    def options(self):
+    def options(self, device_id):
         self._options()
 
 
