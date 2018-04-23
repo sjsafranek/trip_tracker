@@ -61,8 +61,8 @@ class BaseHandler(RequestHandler):
     def options(self):
         # self.sendResponse({"status":"ok"})
         self.set_header("Access-Control-Allow-Origin", "*");
-        self.set_header("Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS");
-        self.set_header("Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
+        self.set_header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+        self.set_header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
         self.set_status(204)
         self.finish()
 
