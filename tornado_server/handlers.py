@@ -30,6 +30,7 @@ class BaseHandler(RequestHandler):
     def sendResponse(self, json_data, status_code=200):
         self.set_status(status_code)
         self.set_header('Content-Type', 'application/json')
+        self.set_header("Access-Control-Allow-Origin", "*")
         self.write(json_data)
 
     def missingParamError(self):
@@ -58,7 +59,10 @@ class BaseHandler(RequestHandler):
         return 0 != len(self.Devices.search(Query().device_id == device_id))
 
     def options(self):
-        self.sendResponse({"status":"ok"})
+        # self.sendResponse({"status":"ok"})
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_status(204)
+        self.finish()
 
 
 class CreateDeviceHandler(BaseHandler):
