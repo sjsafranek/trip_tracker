@@ -100,8 +100,11 @@ class InsertDeviceWaypointHandler(BaseHandler):
         device["waypoint__lon"] = location[0]
         device["waypoint__lat"]  = location[1]
         device["device_id"] = device_id
+        device["trip_id"] = _trips[0]["trip_id"]
         device["event_timestamp"] = int(time.time())
         self.Devices.update(device, Query().device_id == 'device_id')
+
+        self.Database.insertDeviceWaypoint(device)
 
         self.sendResponse({"status":"ok", "data": {"device": device}})
 
@@ -158,6 +161,9 @@ class TripHandler(BaseHandler):
                 trip['trip_end_time'] = int(time.time())
                 trip['destination__lon'] = location[0]
                 trip['destination__lat'] = location[1]
+
+                self.Database.insertDeviceTrip(trip)
+
                 return self.sendResponse({"status":"ok", "data": {"trip": trip}})
 
         return self.missingParamError()

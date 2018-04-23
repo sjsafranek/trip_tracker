@@ -15,7 +15,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.orm import backref
 
 
-class Trips(Base):
+class Trip(Base):
     """ trips table """
     __tablename__ = 'trips'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -28,14 +28,21 @@ class Trips(Base):
     destination__lon = Column(Float)
     destination__lat = Column(Float)
 
-    # def __init__(self, username):
-        # self.username = username
+    def __init__(self, data):
+        self.trip_start_time = data['trip_start_time']
+        self.trip_end_time = data['trip_end_time']
+        self.device_id = data['device_id']
+        self.trip_id = data['trip_id']
+        self.origin__lon = data['origin__lon']
+        self.origin__lat = data['origin__lat']
+        self.destination__lon = data['destination__lon']
+        self.destination__lat = data['destination__lat']
 
     def __repr__(self):
         return '<Trip %r>' % (self.trip_id)
 
 
-class Waypoints(Base):
+class Waypoint(Base):
     """ waypoints table """
     __tablename__ = 'waypoints'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -45,8 +52,12 @@ class Waypoints(Base):
     waypoint__lon = Column(Float)
     waypoint__lat = Column(Float)
 
-    # def __init__(self, username):
-        # self.username = username
+    def __init__(self, data):
+        self.event_timestamp = data['event_timestamp']
+        self.device_id = data['device_id']
+        self.trip_id = data['trip_id']
+        self.waypoint__lon = data['waypoint__lon']
+        self.waypoint__lat = data['waypoint__lat']
 
     def __repr__(self):
         return '<Waypoint %r>' % (self.trip_id)

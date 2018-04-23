@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import lzma
-import base64
+# import lzma
+# import base64
 import builtins
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session
@@ -26,10 +26,27 @@ from models import *
 
 class Database(object):
 
-	def __init__(self, update=False):
+	def __init__(self):
 		""" Create database connection """
 		Session = sessionmaker(bind=engine)
 		self.session = Session()
+		Base.metadata.create_all(bind=engine)
 
-	def insertDeviceWaypoint(self):
-		print("OK")
+	def insertDeviceWaypoint(self, data):
+		wp = Waypoint(data)
+		self.session.add(wp)
+		self.commit()
+
+	def insertDeviceTrip(self, data):
+		trip = Trip(data)
+		self.session.add(trip)
+		self.commit()
+
+	def commit(self):
+		try:
+			self.session.commit()
+		except Exception as e:
+			# self.logger.error(e)
+			print(e)
+			# traceback.print_stack()
+			self.session.rollback()
