@@ -75,15 +75,17 @@ class CreateDeviceHandler(BaseHandler):
     #     self.sendResponse({'status': 'ok'})
 
 
-class UpdateDeviceHandler(BaseHandler):
+class InsertDeviceWaypointHandler(BaseHandler):
     # def get(self):
     #     self.sendResponse({'status': 'ok'})
 
     def put(self, device_id):
-        position = request.args.get('position')
+        position = self.get_argument('position')
+        print(position)
+
         if not position or not device_id:
             return self.missingParamError()
-        elif not deviceIsValid(device_id):
+        elif not self.deviceIsValid(device_id):
             return self.invalidDeviceError()
 
         _trips = self.Trips.search(Query().device_id == device_id)
@@ -103,8 +105,8 @@ class UpdateDeviceHandler(BaseHandler):
 
         self.sendResponse({"status":"ok", "data": {"device": device}})
 
-    def post(self):
-        self.sendResponse({'status': 'ok'})
+    # def post(self):
+        # self.sendResponse({'status': 'ok'})
 
     # def delete(self):
     #     self.sendResponse({'status': 'ok'})
@@ -114,11 +116,10 @@ class TripHandler(BaseHandler):
     # def get(self):
     #     self.sendResponse({'status': 'ok'})
 
-    def post(self):
+    def post(self, device_id):
         trip_id = str(uuid.uuid4())
         event_timestamp = int(time.time())
-        device_id = request.args.get('device_id')
-        position = request.args.get('position')
+        position = self.get_argument('position')
 
         if not self.deviceIsValid(device_id):
             return self.invalidDeviceError()
@@ -137,16 +138,14 @@ class TripHandler(BaseHandler):
                 'destination__lat': None
             }
 
-            Trips.remove(Query().device_id == device_id)
-            Trips.insert(trip)
-            print({"status":"ok", "data": {"trip": trip}})
-            return jsonify({"status":"ok", "data": {"trip": trip}})
+            self.Trips.remove(Query().device_id == device_id)
+            self.Trips.insert(trip)
+            return self.sendResponse({"status":"ok", "data": {"trip": trip}})
 
         self.missingParamError()
 
-    def delete(self):
-        position = request.args.get('position')
-        device_id = request.args.get('device_id')
+    def delete(self, device_id):
+        position = self.get_argument('position')
 
         if not self.deviceIsValid(device_id):
             return self.invalidDeviceError()
@@ -159,34 +158,10 @@ class TripHandler(BaseHandler):
                 trip['trip_end_time'] = int(time.time())
                 trip['destination__lon'] = location[0]
                 trip['destination__lat'] = location[1]
-                return jsonify({"status":"ok", "data": {"trip": trip}})
-                print({"status":"ok", "data": {"trip": trip}})
+                return self.sendResponse({"status":"ok", "data": {"trip": trip}})
 
         return self.missingParamError()
 
-
-# class ApiTileMap(BaseHandler):
-#     def get(self, layer):
-#         folder = os.path.join(config.LAYER_DIR,layer)
-#         if not os.path.exists(folder):
-#             raise ValueError("files not found")
-#         baseURL = '/tms/1.0/' + layer
-#         xml = ''
-#         xml += ('<?xml version="1.0" encoding="utf-8" ?>')
-#         xml += ('<TileMap version="1.0" tilemapservice="' + baseURL + '">')
-#         xml += (' <Title>' + layer + '</Title>')
-#         xml += (' <Abstract></Abstract>')
-#         xml += (' <SRS>EPSG:4326</SRS>')
-#         xml += (' <BoundingBox minx="-180" miny="-90" maxx="180" maxy="90"/>')
-#         xml += (' <Origin x="-180" y="-90"/>')
-#         xml += (' <TileFormat width="' + str(tile.TILE_WIDTH) + '" height="' + str(tile.TILE_HEIGHT) + '" ' + 'mime-type="image/png" extension="png"/>')
-#         xml += (' <TileSets profile="global-geodetic">')
-#         for zoomLevel in range(0, tile.MAX_ZOOM_LEVEL+1):
-#             unitsPerPixel = tile._unitsPerPixel(zoomLevel)
-#             xml += ('<TileSet href="' + baseURL + '/' + str(zoomLevel) + '" units-per-pixel="'+str(unitsPerPixel) + '" order="' + str(zoomLevel) + '"/>')
-#         xml += (' </TileSets>')
-#         xml += ('</TileMap>')
-#         self.sendXmlResponse(xml)
 
 
 '''

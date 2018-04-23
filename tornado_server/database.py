@@ -21,14 +21,15 @@ db_session = scoped_session(sessionmaker(autocommit=False,
 Base = declarative_base()
 Base.query = db_session.query_property()
 
-from .Models import *
+from models import *
 
 
 class Database(object):
-	""" Database for OkCupid Model Objects """
 
 	def __init__(self, update=False):
 		""" Create database connection """
-		self._init_db()
 		Session = sessionmaker(bind=engine)
 		self.session = Session()
+
+	def insertDeviceWaypoint(self):
+		print("OK")

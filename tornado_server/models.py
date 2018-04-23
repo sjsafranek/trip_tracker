@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from .Database import Base
+from database import Base
 
 import datetime
 from sqlalchemy import ForeignKey
@@ -18,6 +18,7 @@ from sqlalchemy.orm import backref
 class Trips(Base):
     """ trips table """
     __tablename__ = 'trips'
+    id = Column(Integer, primary_key=True, autoincrement=True)
     trip_start_time = Column(Integer)
     trip_end_time = Column(Integer)
     device_id = Column(String(50))
@@ -37,6 +38,7 @@ class Trips(Base):
 class Waypoints(Base):
     """ waypoints table """
     __tablename__ = 'waypoints'
+    id = Column(Integer, primary_key=True, autoincrement=True)
     event_timestamp = Column(Integer)
     device_id = Column(String(50))
     trip_id = Column(String(50))
