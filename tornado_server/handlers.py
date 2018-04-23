@@ -28,9 +28,11 @@ class BaseHandler(RequestHandler):
         self.Devices = cache.table('devices')
 
     def sendResponse(self, json_data, status_code=200):
+        self.set_header("Access-Control-Allow-Origin", "*");
+        self.set_header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+        self.set_header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
         self.set_status(status_code)
         self.set_header('Content-Type', 'application/json')
-        self.set_header("Access-Control-Allow-Origin", "*")
         self.write(json_data)
 
     def missingParamError(self):
