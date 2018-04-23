@@ -60,7 +60,7 @@ class BaseHandler(RequestHandler):
     def deviceIsValid(self, device_id):
         return 0 != len(self.Devices.search(Query().device_id == device_id))
 
-    def options(self):
+    def options(self, device_id):
         # self.sendResponse({"status":"ok"})
         self.set_header("Access-Control-Allow-Origin", "*");
         self.set_header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
